@@ -2,9 +2,19 @@
 import os
 from os.path import exists
 import sys
+import platform
+
+pltfm = platform.system() # get user OS
+
+if(pltfm!="Linux"): # if user is not using linux, warn them
+	suphn = input("MeltOS has detected your OS as " + pltfm +", but MeltOS is designed for Linux. Are you sure you want to continue? (Y/n): ")
+	if(suphn!="y"):
+		print("You selected " + suphn)
+		print("Exiting...")
+		exit()
 
 os.system("clear") # clear the screen
-print("------------------------------------------------\n| MeltOS - v0.1.2.1 MIT License                |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
+print("------------------------------------------------\n| MeltOS - v0.1.2.2 MIT License                |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
 def read_cmd(cmd): # this reads the given command. coolio, right?
 	if(cmd[0:4]=="exit" and len(cmd)==4): # this code exits back to the normal stuff
 		print("Exiting gracefully...")
