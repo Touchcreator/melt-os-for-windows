@@ -13,12 +13,12 @@ if(pltfm!="Linux"): # if user is not using linux, warn them
 		print("Exiting...")
 		exit()
 
-os.system("clear") # clear the screen
+os.system("cls") # clear the screen
 print("------------------------------------------------\n| MeltOS - v0.1.2.2 MIT License                |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
 def read_cmd(cmd): # this reads the given command. coolio, right?
 	if(cmd[0:4]=="exit" and len(cmd)==4): # this code exits back to the normal stuff
 		print("Exiting gracefully...")
-		os.system("clear")
+		os.system("cls")
 		exit()
 	elif(cmd[0:3]=="dir" and len(cmd)==3): # print the directory
 		print(os.listdir(cwd)) # this is fine
@@ -33,7 +33,7 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 			print("E: " + cmd[3:len(cmd)] + " is beyond your permissions")
 	elif(cmd[0:5]=="clear" or cmd[0:3]=="cls"): # if command is clear or cls, clear screen. duh
 		if(len(cmd)==3 or len(cmd)==5):
-			os.system("clear")
+			os.system("cls")
 		else:
 			print("E: \"" + cmd + "'| not found or improper") # this is here because of weird code stuff
 	elif(cmd[0:5]=="wget " and len(cmd)>=5): # crudely use wget using os.system
