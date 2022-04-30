@@ -6,8 +6,14 @@ Linux:
 ```sh
 python3 main.py
 ```
-MacOS/Windows:  
-I have no clue, but it's unlikely that this works on MacOS/Windows.
+(keep in mind that this doesnt work for linux)
+
+Windows:  
+```sh
+py main.py
+```
+MacOS:
+Idk lol
 
 ## Dependencies
 python3\*\*  
