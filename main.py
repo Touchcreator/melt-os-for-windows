@@ -37,7 +37,7 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 		else:
 			print("E: \"" + cmd + "'| not found or improper") # this is here because of weird code stuff
 	elif(cmd[0:5]=="wget " and len(cmd)>=5): # crudely use wget using os.system
-		os.system("wget " + cmd[5:len(cmd)] + " >> " + homedir + "/tmp.txt")
+		os.system("curl " + cmd[5:len(cmd)] + " >> " + homedir + "/tmp.txt")
 		with open(homedir + "/tmp.txt", "r") as out: # this code sucks
 			print(out.read())
 	elif(cmd[0:6]=="shell " and len(cmd)>=6): # crudely use any normal command in normal normalness?
