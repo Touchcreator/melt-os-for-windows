@@ -6,7 +6,7 @@ import platform
 
 pltfm = platform.system() # get user OS
 
-if(pltfm!="Linux"): # if user is not using windows, warn them
+if(pltfm!="Windows"): # if user is not using windows, warn them
 	suphn = input("MeltOS has detected your OS as " + pltfm +", but MeltOS for Windows is designed for Windows. Are you sure you want to continue? (Y/n): ")
 	if(suphn!="y"):
 		print("You selected " + suphn)
