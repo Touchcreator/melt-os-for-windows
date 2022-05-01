@@ -14,7 +14,8 @@ if(pltfm!="Windows"): # if user is not using windows, warn them
 		print("Exiting...")
 		exit()
 mover = "v0.1.3.3"
-os.system("curl -s 'https://meltos.wens.cf/newest' -O")
+os.system("curl https://meltos.wens.cf/newest -outfile")
+os.rename("utfile", "newest")
 filepath = "newest"
 with open(filepath) as fp:
 	for index, line in enumerate(fp):
