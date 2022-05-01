@@ -1,25 +1,43 @@
 # these imports are important
 import os
 from os.path import exists
-import sys
 import platform
-import requests
-pltfm = platform.system() # get user OS
+import time
+
+pltfm = platform.system() # get user OS (for pltfm detection and host cmd)
 hsarc = platform.machine() # get user arch (e.g. x86_64, armhf, i386, etc) (for host cmd)
 
 if(pltfm!="Windows"): # if user is not using windows, warn them
-	suphn = input("MeltOS has detected your OS as " + pltfm +", but MeltOS for Windows is designed for Windows. Are you sure you want to continue? (Y/n): ")
-	if(suphn!="y"):
-		print("You selected " + suphn)
+	cptqn = input("MeltOS For Windows has detected your OS as " + pltfm +", but MeltOS For Windows is designed for Windows. Are you sure you want to continue? (Y/n): ")
+	if(cptqn!="y"):
+		print("You selected " + cptqn)
 		print("Exiting...")
 		exit()
+mover = "v0.1.3.3"
+os.system("curl -s 'https://meltos.wens.cf/newest' -O")
+filepath = "newest"
+with open(filepath) as fp:
+	for index, line in enumerate(fp):
+		monewestver = line.strip()
+if(monewestver!=mover):
+	verqn = input("MeltOS has detected you are running " + str(mover) +", but the newest MeltOS version is " + str(monewestver) + ". Are you sure you want to continue? (Y/n): ")
+	if(verqn!="y"):
+		print("You selected " + verqn)
+		print("Exiting...")
+		os.remove("newest")
+		exit()	
+os.remove("newest")
 
 os.system("cls") # clear the screen
-print("------------------------------------------------\n| MeltOS for Windows - v0.1.3.1 MIT License    |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
+print("""------------------------------------------------
+| MeltOS - """ + mover + """ MIT License                |
+| It's not really an OS, just a python script! |
+------------------------------------------------
+""") # this is the intro box thing
 def read_cmd(cmd): # this reads the given command. coolio, right?
 	if(cmd[0:4]=="exit" and len(cmd)==4): # this code exits back to the normal stuff
 		print("Exiting gracefully...")
-		os.system("cls")
+		os.system("clear")
 		exit()
 	elif(cmd[0:3]=="dir" and len(cmd)==3): # print the directory
 		print(os.listdir(cwd)) # this is fine
@@ -36,12 +54,12 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 		if(len(cmd)==3 or len(cmd)==5):
 			os.system("cls")
 		else:
-			print("E: \"" + cmd + "'| not found or improper") # this is here because of weird code stuff
+			print("E: \"" + cmd + "'| not found or improper.") # this is here because of weird code stuff
 	elif(cmd[0:5]=="wget " and len(cmd)>=5): # crudely use curl using os.system
 		os.system("curl " + cmd[5:len(cmd)])
 	elif(cmd[0:6]=="shell " and len(cmd)>=6): # crudely use any normal command in normal normalness?
 		os.system(cmd[6:len(cmd)] + " >> " + homedir + "/tmp.txt")
-		with open(homedir + "/tmp.txt", "r") as out: # this code sucks x2
+		with open(homedir + "/tmp.txt", "r") as out: # this code sucks x3
 			print(out.read())
 	elif(cmd[0:5]=="echo " and len(cmd)>=5): # echo the inputted text, simple
 		print(cmd[5:len(cmd)])
@@ -68,8 +86,10 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 			print("Installing \"" + cmd[4:len(cmd)] + ".moexe\" from meltos.wens.cf...\n")
 			read_cmd("shell curl https://meltos.wens.cf/moexe/" + cmd[4:len(cmd)] + ".moexe -outfile")
 			os.rename("utfile", cmd[4:len(cmd)] + ".moexe")
+	elif(cmd[0:5]=="wait " and len(cmd)>=5):
+		time.sleep(int(cmd[5:len(cmd)]))
 	else: # if all else fails, give an error
-		print("E: \"" + cmd + "\" not found or improper")
+		print("E: \"" + cmd + "\" not found or improper.")
 homedir = os.getcwd() # set the home directory to the init location
 
 while True:
