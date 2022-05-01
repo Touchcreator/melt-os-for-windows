@@ -3,8 +3,9 @@ import os
 from os.path import exists
 import sys
 import platform
-
+import requests
 pltfm = platform.system() # get user OS
+hsarc = platform.machine() # get user arch (e.g. x86_64, armhf, i386, etc) (for host cmd)
 
 if(pltfm!="Windows"): # if user is not using windows, warn them
 	suphn = input("MeltOS has detected your OS as " + pltfm +", but MeltOS for Windows is designed for Windows. Are you sure you want to continue? (Y/n): ")
@@ -14,7 +15,7 @@ if(pltfm!="Windows"): # if user is not using windows, warn them
 		exit()
 
 os.system("cls") # clear the screen
-print("------------------------------------------------\n| MeltOS for Windows - v0.1.2.2 MIT License    |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
+print("------------------------------------------------\n| MeltOS for Windows - v0.1.3.1 MIT License    |\n| It's not really an OS, just a python script! |\n------------------------------------------------") # this is the intro box thing
 def read_cmd(cmd): # this reads the given command. coolio, right?
 	if(cmd[0:4]=="exit" and len(cmd)==4): # this code exits back to the normal stuff
 		print("Exiting gracefully...")
@@ -56,6 +57,17 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 				print(line.strip()) # use line.strip or i will come for you in your sleep
 	elif(cmd[0:4]=="py3 " and len(cmd)>=4): # run a python script in a python script. sounds cool to me
 		exec(open(cmd[4:len(cmd)]).read())
+	elif(cmd[0:4]=="host" and len(cmd)==4): # give host info
+		print("Host OS: " + pltfm + "\nHost Architecture: " + hsarc)
+	elif(cmd[0:4]=="get " and len(cmd)>=4): # package manager thing ig
+		if(cmd[4:7]=="-py"): # if py, get py, else get moexe
+			print("Installing \"" + cmd[8:len(cmd)] + ".py\" from meltos.wens.cf...\n")
+			read_cmd("shell curl https://meltos.wens.cf/python/" + cmd[8:len(cmd)] + ".py -outfile")
+			os.rename("utfile", cmd[8:len(cmd)] + ".py")
+		else:
+			print("Installing \"" + cmd[4:len(cmd)] + ".moexe\" from meltos.wens.cf...\n")
+			read_cmd("shell curl https://meltos.wens.cf/moexe/" + cmd[4:len(cmd)] + ".moexe -outfile")
+			os.rename("utfile", cmd[4:len(cmd)] + ".moexe")
 	else: # if all else fails, give an error
 		print("E: \"" + cmd + "\" not found or improper")
 homedir = os.getcwd() # set the home directory to the init location
