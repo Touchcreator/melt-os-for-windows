@@ -3,3 +3,5 @@ utfile
 example.moexe
 example.py
 restart.moexe
+tmp/
+mox/

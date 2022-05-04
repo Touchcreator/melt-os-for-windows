@@ -1,11 +1,43 @@
 # these imports are important
-import os
+import os, platform, time
 from os.path import exists
-import platform
-import time
 
+homedir = os.getcwd() # set the home directory to the init location
 pltfm = platform.system() # get user OS (for pltfm detection and host cmd)
 hsarc = platform.machine() # get user arch (e.g. x86_64, armhf, i386, etc) (for host cmd)
+
+def getupdate(): # update
+	print("Updating get...")
+	prevdir = os.getcwd()
+	os.chdir(homedir + "/tmp")
+	print("Step 1/3 complete.")
+	os.system("curl https://meltos.wens.cf/moexe/list -outfile")
+	os.remove("list")
+	os.rename("utfile", "list")
+	filepath = homedir + "/tmp/list"
+	with open(filepath) as fp:
+		for index, line in enumerate(fp):
+			molst = line.strip()
+	print("Step 2/3 complete.")
+	os.system("curl https://meltos.wens.cf/python/list-py -outfile")
+	os.remove("list-py")
+	os.rename("utfile", "list-py")
+	filepath = homedir + "/tmp/list-py"
+	with open(filepath) as fp:
+		for index, line in enumerate(fp):
+			pylst = line.strip()
+	print("Step 3/3 complete.")
+	os.chdir(prevdir)
+	print("Update completed.")
+
+# create important dirs
+moi = exists(homedir + "/mox")
+if(not moi):
+	os.mkdir(homedir + "/mox")
+moi = exists(homedir + "/tmp")
+if(not moi):
+	os.mkdir(homedir + "/tmp")
+	getupdate()
 
 if(pltfm!="Windows"): # if user is not using windows, warn them
 	cptqn = input("MeltOS For Windows has detected your OS as " + pltfm +", but MeltOS For Windows is designed for Windows. Are you sure you want to continue? (Y/n): ")
@@ -13,9 +45,11 @@ if(pltfm!="Windows"): # if user is not using windows, warn them
 		print("You selected " + cptqn)
 		print("Exiting...")
 		exit()
-mover = "v0.1.3.3"
+mover = "v0.1.4"
+os.chdir(homedir + "/tmp")
 os.system("curl https://meltos.wens.cf/newest -outfile")
 os.rename("utfile", "newest")
+filepath = homedir + "/tmp/newest"
 filepath = "newest"
 with open(filepath) as fp:
 	for index, line in enumerate(fp):
@@ -28,17 +62,19 @@ if(monewestver!=mover):
 		os.remove("newest")
 		exit()	
 os.remove("newest")
+os.chdir("..")
 
 os.system("cls") # clear the screen
 print("""------------------------------------------------
-| MeltOS - """ + mover + """ MIT License                |
+| MeltOS - """ + mover + """ MIT License                 |
 | It's not really an OS, just a python script! |
 ------------------------------------------------
 """) # this is the intro box thing
+cmds = ["exit", "dir", "cd", "clear", "cls", "wget", "shell", "echo", "scr", "read", "py3", "host", "get", "wait", "hd", "help"]
 def read_cmd(cmd): # this reads the given command. coolio, right?
 	if(cmd[0:4]=="exit" and len(cmd)==4): # this code exits back to the normal stuff
 		print("Exiting gracefully...")
-		os.system("clear")
+		os.system("cls")
 		exit()
 	elif(cmd[0:3]=="dir" and len(cmd)==3): # print the directory
 		print(os.listdir(cwd)) # this is fine
@@ -79,16 +115,41 @@ def read_cmd(cmd): # this reads the given command. coolio, right?
 	elif(cmd[0:4]=="host" and len(cmd)==4): # give host info
 		print("Host OS: " + pltfm + "\nHost Architecture: " + hsarc)
 	elif(cmd[0:4]=="get " and len(cmd)>=4): # package manager thing ig
-		if(cmd[4:7]=="-py"): # if py, get py, else get moexe
+		if(cmd[4:10]=="update"):
+			getupdate()
+		elif(cmd[4:7]=="-py"): # if py, get py, else get moexe
 			print("Installing \"" + cmd[8:len(cmd)] + ".py\" from meltos.wens.cf...\n")
 			read_cmd("shell curl https://meltos.wens.cf/python/" + cmd[8:len(cmd)] + ".py -outfile")
 			os.rename("utfile", cmd[8:len(cmd)] + ".py")
 		else:
+			prevdir = os.getcwd()
+			read_cmd("cd " + homedir + "/mox") # move to homedir/mox
+			print("I: Moved to homedir/mox to allow support for moexe integration.")
 			print("Installing \"" + cmd[4:len(cmd)] + ".moexe\" from meltos.wens.cf...\n")
 			read_cmd("shell curl https://meltos.wens.cf/moexe/" + cmd[4:len(cmd)] + ".moexe -outfile")
 			os.rename("utfile", cmd[4:len(cmd)] + ".moexe")
+			read_cmd("cd " + prevdir)
 	elif(cmd[0:5]=="wait " and len(cmd)>=5):
 		time.sleep(int(cmd[5:len(cmd)]))
+	elif(cmd[0:2]=="hd" and len(cmd)==2):
+		print("Your home directory is \"" + homedir + "\".")
+	elif(cmd[0:4]=="help" and len(cmd)==4):
+		print(cmds)
+	else: 
+		splcmd = cmd.split(None, 1)
+		if(splcmd!=[]):
+			moe = exists(homedir + "/mox/" + splcmd[0] + ".moexe")
+			if(moe):
+				read_cmd("scr " + homedir + "/mox/" + splcmd[0] + ".moexe")
+			else:
+				cmdnotfound(cmd)
+		else:
+			cmdnotfound(cmd)
+def cmdnotfound(cmd):
+	if(cmd in molst):
+		print('E: "' + cmd + '" not found, but can be installed using "get ' + cmd + '".')
+	elif(cmd in molst):
+		print('E: "' + cmd + '" not found, but can be installed using "get -py ' + cmd + '".')
 	else: # if all else fails, give an error
 		print("E: \"" + cmd + "\" not found or improper.")
 homedir = os.getcwd() # set the home directory to the init location
